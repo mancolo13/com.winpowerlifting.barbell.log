@@ -2,25 +2,27 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import '../../services/routing_service.dart';
 
+
 class Tab1Screen extends StatefulWidget {
   const Tab1Screen({super.key});
-
   @override
   State<Tab1Screen> createState() => _Tab1ScreenState();
 }
 
 class _Tab1ScreenState extends State<Tab1Screen> {
-  int _score = 92;
-  bool _active = true;
+  double _weight = 140;
+  int _reps = 5;
 
   @override
   Widget build(BuildContext context) {
+    final oneRm = _weight * (1 + _reps / 30.0);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Win • Lifts'),
+        title: const Text('Win • Barbell 1RM'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.stars_rounded, color: AppTheme.primaryColor),
+            icon: const Icon(Icons.flash_on, color: AppTheme.primaryColor),
             onPressed: () => RoutingService.openRegistrationUrl(),
           ),
         ],
@@ -29,83 +31,71 @@ class _Tab1ScreenState extends State<Tab1Screen> {
         padding: const EdgeInsets.all(16),
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [AppTheme.primaryColor.withValues(alpha: 0.3), AppTheme.surfaceColor],
+                colors: [AppTheme.primaryColor.withValues(alpha: 0.35), AppTheme.surfaceColor],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(22),
               border: Border.all(color: AppTheme.primaryColor.withValues(alpha: 0.4)),
             ),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Lifts Health', style: const TextStyle(fontSize: 16, color: Colors.white70)),
-                    Switch(
-                      value: _active,
-                      activeThumbColor: AppTheme.primaryColor,
-                      onChanged: (v) => setState(() => _active = v),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text('$_score%', style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                LinearProgressIndicator(
-                  value: 0.92,
-                  backgroundColor: Colors.white12,
-                  color: AppTheme.primaryColor,
-                  minHeight: 8,
-                  borderRadius: BorderRadius.circular(4),
-                ),
+                const Text('ESTIMATED 1-REP MAX (BRZYCKI)', style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                const SizedBox(height: 10),
+                Text('${oneRm.toStringAsFixed(1)} KG', style: const TextStyle(fontSize: 48, fontWeight: FontWeight.w900, color: AppTheme.secondaryColor)),
+                const SizedBox(height: 6),
+                Text('Based on ${_weight.toStringAsFixed(0)} kg x $_reps reps', style: const TextStyle(color: Colors.white, fontSize: 13)),
               ],
             ),
           ),
           const SizedBox(height: 16),
+          const Text('Input Working Weight (KG)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Slider(
+            value: _weight,
+            min: 40,
+            max: 300,
+            activeColor: AppTheme.primaryColor,
+            onChanged: (v) => setState(() => _weight = v),
+          ),
+          const SizedBox(height: 10),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(child: _buildMetric('Total', '1,840', Icons.analytics)),
-              const SizedBox(width: 12),
-              Expanded(child: _buildMetric('Active', '99.2%', Icons.speed)),
+              const Text('Reps Completed', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+              DropdownButton<int>(
+                value: _reps,
+                dropdownColor: AppTheme.surfaceColor,
+                items: List.generate(10, (i) => i + 1).map((r) => DropdownMenuItem(value: r, child: Text('$r Reps'))).toList(),
+                onChanged: (v) => setState(() => _reps = v ?? 1),
+              ),
             ],
           ),
           const SizedBox(height: 16),
-          ...List.generate(3, (i) => Card(
-            color: AppTheme.surfaceColor,
-            margin: const EdgeInsets.only(bottom: 10),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.2),
-                child: Icon(Icons.check, color: AppTheme.primaryColor),
-              ),
-              title: Text('Lifts Priority ${i + 1}'),
-              subtitle: Text('Progress: Normal • Level ${i + 1}'),
-              trailing: const Icon(Icons.chevron_right, color: Colors.white38),
-              onTap: () => setState(() => _score = (_score + 1) % 100),
-            ),
-          )),
+          _pctRow('95% Max', (oneRm * 0.95).toStringAsFixed(1)),
+          _pctRow('90% Max', (oneRm * 0.90).toStringAsFixed(1)),
+          _pctRow('80% Max (Hypertrophy)', (oneRm * 0.80).toStringAsFixed(1)),
+          _pctRow('70% Max (Volume)', (oneRm * 0.70).toStringAsFixed(1)),
         ],
       ),
     );
   }
 
-  Widget _buildMetric(String t, String v, IconData ic) {
+  Widget _pctRow(String label, String kg) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppTheme.surfaceColor, borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(color: AppTheme.surfaceColor, borderRadius: BorderRadius.circular(12)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(ic, color: AppTheme.secondaryColor, size: 28),
-          const SizedBox(height: 8),
-          Text(t, style: const TextStyle(color: Colors.white60, fontSize: 13)),
-          Text(v, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Text(label, style: const TextStyle(color: Colors.white70)),
+          Text('$kg kg', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppTheme.secondaryColor)),
         ],
       ),
     );
   }
 }
+

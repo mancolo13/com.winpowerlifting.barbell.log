@@ -32,27 +32,26 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: AppTheme.surfaceColor,
         indicatorColor: AppTheme.primaryColor.withValues(alpha: 0.2),
         destinations: [
-        NavigationDestination(
-          icon: const Icon(Icons.fitness_center_outlined),
-          selectedIcon: const Icon(Icons.fitness_center, color: AppTheme.primaryColor),
-          label: 'Lifts',
-        ),
-        NavigationDestination(
-          icon: const Icon(Icons.table_chart_outlined),
-          selectedIcon: const Icon(Icons.table_chart, color: AppTheme.primaryColor),
-          label: 'RPE',
-        ),
-        NavigationDestination(
-          icon: const Icon(Icons.radio_button_checked_outlined),
-          selectedIcon: const Icon(Icons.radio_button_checked, color: AppTheme.primaryColor),
-          label: 'Plates',
-        ),
-        NavigationDestination(
-          icon: const Icon(Icons.event_available_outlined),
-          selectedIcon: const Icon(Icons.event_available, color: AppTheme.primaryColor),
-          label: 'Meet Prep',
-        ),
-
+          NavigationDestination(
+            icon: const Icon(Icons.fitness_center_outlined),
+            selectedIcon: const Icon(Icons.fitness_center, color: AppTheme.primaryColor),
+            label: '1RM Calc',
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.layers_outlined),
+            selectedIcon: const Icon(Icons.layers, color: AppTheme.primaryColor),
+            label: 'Plates',
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.emoji_events_outlined),
+            selectedIcon: const Icon(Icons.emoji_events, color: AppTheme.primaryColor),
+            label: 'PRs',
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.history_outlined),
+            selectedIcon: const Icon(Icons.history, color: AppTheme.primaryColor),
+            label: 'Logs',
+          ),
         ],
       ),
     );
